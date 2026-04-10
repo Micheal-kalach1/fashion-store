@@ -1,0 +1,16 @@
+{
+  "name": "fashion-store",
+  "version": "1.0.0",
+  "description": "Professional starter for a fashion store web app",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
