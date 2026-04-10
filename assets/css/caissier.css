@@ -1,0 +1,10 @@
+.caissier-dashboard {
+    padding: 20px;
+}
+
+.payment-card {
+    background: #fff;
+    padding: 15px;
+    margin: 10px 0;
+    border-left: 5px solid green;
+}

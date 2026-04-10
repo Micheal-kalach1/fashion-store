@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+<h1>📊 Dashboard Admin</h1>
+
+<div id="stats"></div>
+
+<script type="module">
+import { loadDashboard } from "../../../assets/js/admin/dashboard.js";
+
+async function render() {
+
+    const stats = await loadDashboard();
+
+    document.getElementById("stats").innerHTML = `
+        <p>👤 Utilisateurs: ${stats.users}</p>
+        <p>🛍 Produits: ${stats.products}</p>
+        <p>📦 Commandes: ${stats.orders}</p>
+        <p>💰 Revenus: ${stats.revenue} FCFA</p>
+    `;
+}
+
+render();
+</script>
+
+</body>
+</html>

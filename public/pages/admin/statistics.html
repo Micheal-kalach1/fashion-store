@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Statistiques</title>
+</head>
+<body>
+
+<h1>📈 Ventes par jour</h1>
+
+<div id="chart"></div>
+
+<script type="module">
+import { getSalesByDay } from "../../../assets/js/admin/statistics.js";
+
+async function renderStats() {
+
+    const stats = await getSalesByDay();
+
+    let html = "";
+
+    for (let date in stats) {
+        html += `<p>${date} : ${stats[date]} FCFA</p>`;
+    }
+
+    document.getElementById("chart").innerHTML = html;
+}
+
+renderStats();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+
+<h1>Connexion</h1>
+
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Se connecter</button>
+
+<script type="module">
+import { loginUser } from "../../../assets/js/auth.js";
+import { redirectByRole } from "../../../assets/js/redirect.js";
+
+window.login = async () => {
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const user = await loginUser(email, password);
+
+    if (user.role) {
+        redirectByRole(user.role);
+    }
+};
+</script>
+
+</body>
+</html>

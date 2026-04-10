@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panier</title>
+</head>
+<body>
+
+<h1>Mon Panier</h1>
+
+<div id="cart"></div>
+
+<h2 id="total"></h2>
+
+<button onclick="checkoutCart()">Valider commande</button>
+
+<script type="module">
+import { getCart, getTotal, checkout, removeFromCart } from "../../../assets/js/client/cart.js";
+import { supabase } from "../../../config/supabase.js";
+
+function renderCart() {
+
+    const cart = getCart();
+    const container = document.getElementById("cart");
+
+    container.innerHTML = cart.map(item => `
+        <div>
+            <h3>${item.nom}</h3>
+            <p>${item.prix} x ${item.quantity}</p>
+            <button onclick="remove('${item.id}')">Supprimer</button>
+        </div>
+    `).join("");
+
+    document.getElementById("total").innerText =
+        "Total: " + getTotal() + " FCFA";
+}
+
+window.remove = (id) => {
+    removeFromCart(id);
+    renderCart();
+};
+
+window.checkoutCart = async () => {
+
+    const { data } = await supabase.auth.getUser();
+    const user = data.user;
+
+    const result = await checkout(user.id);
+
+    alert(result);
+    renderCart();
+};
+
+renderCart();
+</script>
+
+</body>
+</html>

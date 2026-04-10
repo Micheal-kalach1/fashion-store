@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+</head>
+<body>
+
+<h1>💬 Négociation</h1>
+
+<div id="messages"></div>
+
+<input id="msg" placeholder="Message / offre prix">
+<button onclick="send()">Envoyer</button>
+
+<script type="module">
+import { sendMessage, getMessages } from "../../../assets/js/modules/negotiations.js";
+
+const order_id = "ORDER_ID";
+
+async function load() {
+
+    const msgs = await getMessages(order_id);
+
+    document.getElementById("messages").innerHTML =
+        msgs.map(m => `<p>${m.price_offer}</p>`).join("");
+}
+
+window.send = async () => {
+
+    const msg = document.getElementById("msg").value;
+
+    await sendMessage(order_id, "USER_ID", msg);
+
+    load();
+};
+
+load();
+</script>
+
+</body>
+</html>

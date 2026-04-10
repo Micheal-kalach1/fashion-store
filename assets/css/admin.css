@@ -1,0 +1,13 @@
+.admin-dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    padding: 20px;
+}
+
+.admin-card {
+    background: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+}

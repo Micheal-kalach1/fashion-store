@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caissier Dashboard</title>
+</head>
+<body>
+
+<h1>💰 Dashboard Caissier</h1>
+
+<div id="stats"></div>
+
+<h2>Commandes en attente</h2>
+<div id="orders"></div>
+
+<script type="module">
+import { loadCashierStats } from "../../../assets/js/caissier/dashboard.js";
+import { getPendingOrders, validatePayment } from "../../../assets/js/caissier/payments.js";
+
+async function render() {
+
+    const stats = await loadCashierStats();
+
+    document.getElementById("stats").innerHTML = `
+        <p>💵 Total encaissé: ${stats.totalEncaisse} FCFA</p>
+        <p>📦 Commandes payées: ${stats.commandesPayees}</p>
+        <p>🔁 Transactions: ${stats.totalTransactions}</p>
+    `;
+
+    const orders = await getPendingOrders();
+
+    document.getElementById("orders").innerHTML = orders.map(o => `
+        <div>
+            <p>Commande: ${o.id}</p>
+            <p>Total: ${o.total}</p>
+
+            <button onclick="pay('${o.id}')">
+                Encaisser Mobile Money
+            </button>
+        </div>
+    `).join("");
+}
+
+window.pay = async (id) => {
+
+    const caissier_id = "CURRENT_USER_ID"; // à remplacer par auth user
+    const result = await validatePayment(id, caissier_id, "mobile_money");
+
+    alert(result);
+    render();
+};
+
+render();
+</script>
+
+</body>
+</html>
