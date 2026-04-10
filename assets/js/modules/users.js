@@ -1,24 +1,23 @@
-import { supabase } from "../config/supabase.js";
-import { redirectByRole } from "./redirect.js";
+import { supabase } from '/config/supabase.js';
+import { redirectByRole } from '../redirect.js';
 
-// =========================
-// SESSION AUTO CHECK
-// =========================
-async function initApp() {
+export async function getCurrentProfile() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) return null;
 
-    const { data } = await supabase.auth.getUser();
+  const { data: profile, error: profileError } = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', data.user.id)
+    .single();
 
-    if (!data.user) return;
-
-    const { data: profile } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", data.user.id)
-        .single();
-
-    if (profile) {
-        redirectByRole(profile.role);
-    }
+  if (profileError) return null;
+  return profile;
 }
 
-initApp();
+export async function initSessionRedirect() {
+  const profile = await getCurrentProfile();
+  if (profile?.role) {
+    redirectByRole(profile.role);
+  }
+}
