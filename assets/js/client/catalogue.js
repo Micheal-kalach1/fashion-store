@@ -1,4 +1,4 @@
-import { supabase } from "../../../config/supabase.js";
+import { supabase } from '/config/supabase.js';
 import { addToCart } from "./cart.js";
 
 const container = document.getElementById("products");

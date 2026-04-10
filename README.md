@@ -1,35 +1,40 @@
-<<<<<<< HEAD
-# fashion-store
-test
-=======
 # Fashion Store
 
-Application web minimaliste et professionnelle pour une boutique de mode.
+Application web modulaire pour la gestion d'une boutique de mode (catalogue, commandes, paiements, administration).
 
-## Fonctionnalités
+## Stack
 
-- API HTTP légère (Node.js natif) pour consulter les produits
-- Frontend statique simple pour afficher le catalogue
-- Structure modulaire (config, routes, services, data)
-- Tests unitaires via `node:test`
+- Backend: Node.js natif (HTTP + routes)
+- Frontend: HTML/CSS/JS statiques
+- Données: Supabase (PostgreSQL)
+- Tests: `node:test`
 
-## Démarrage
+## Démarrage rapide
 
 ```bash
+npm install
 npm run dev
 ```
 
-Puis ouvrir : `http://localhost:3000`
+Ouvrir ensuite: `http://localhost:3000`.
 
 ## Scripts
 
-- `npm run dev` : démarre le serveur en mode développement
+- `npm run dev` : démarre le serveur en mode watch
 - `npm start` : démarre le serveur
-- `npm test` : lance les tests
+- `npm test` : exécute les tests unitaires
 
-## Endpoints API
+## API backend locale
 
-- `GET /api/health` : état du service
-- `GET /api/products` : liste des produits
-- `GET /api/products/:id` : détail d'un produit
->>>>>>> 2a9c22bb78c1e95d23d7fbba4a309a7873ca4b0f
+- `GET /api/health`
+- `GET /api/products`
+- `GET /api/products/:id`
+
+## Structure du dépôt
+
+- `src/` : logique backend
+- `public/` : pages statiques
+- `assets/` : scripts front et styles par rôle
+- `database/` : schéma SQL, seeds, politiques
+- `docs/` : documentation technique
+- `utils/` : helpers utilitaires
