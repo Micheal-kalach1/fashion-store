@@ -1,32 +1,41 @@
-import { supabase } from "../../../config/supabase.js";
+import { supabase } from '/config/supabase.js';
+import { reduceStock } from './stock.js';
 
-/* =========================
-   CREER COMMANDE
-========================= */
-export async function createOrder(client_id, total) {
+export async function createOrder(clientId, total) {
+  const { data, error } = await supabase
+    .from('orders')
+    .insert([
+      {
+        client_id: clientId,
+        total,
+        statut: 'en_attente'
+      }
+    ])
+    .select('id, client_id, total, statut, created_at')
+    .single();
 
-    const { error } = await supabase.from("orders").insert([
-        {
-            client_id,
-            total,
-            statut: "en_attente"
-        }
-    ]);
+  if (error) {
+    return { error: error.message, data: null };
+  }
 
-    return error ? error.message : "SUCCESS";
+  return { error: null, data };
 }
-import { reduceStock } from "./stock.js";
 
-for (let item of cart) {
-    await supabase.from("order_items").insert([
-        {
-            order_id: orderId,
-            product_id: item.id,
-            quantity: item.quantity,
-            price: item.prix
-        }
-    ]);
+export async function addOrderItems(orderId, items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return 'AUCUN ARTICLE À AJOUTER';
+  }
 
-    // 🔥 diminution stock
-    await reduceStock(item.id, item.quantity);
+  const payload = items.map((item) => ({
+    order_id: orderId,
+    product_id: item.id,
+    quantity: item.quantity,
+    price: item.prix
+  }));
+
+  const { error } = await supabase.from('order_items').insert(payload);
+  if (error) return error.message;
+
+  await Promise.all(items.map((item) => reduceStock(item.id, item.quantity)));
+  return 'SUCCESS';
 }

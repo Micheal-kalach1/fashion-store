@@ -1,5 +1,5 @@
-import { supabase } from "../config/supabase.js";
-import { redirectByRole } from "./redirect.js";
+import { supabase } from '/config/supabase.js';
+import { redirectByRole } from '/assets/js/redirect.js';
 
 // =========================
 // SESSION AUTO CHECK
