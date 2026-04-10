@@ -1,5 +1,5 @@
 import { createReadStream, existsSync, statSync } from 'node:fs';
-import { extname, join, normalize } from 'node:path';
+import { extname, join, normalize, resolve, sep } from 'node:path';
 
 const ROOT_DIR = process.cwd();
 const PUBLIC_DIR = join(ROOT_DIR, 'public');
@@ -24,26 +24,38 @@ const MIME_TYPES = {
 };
 
 function toSafePath(pathname) {
-  return normalize(pathname).replace(/^([.]{2}[/\\])+/, '');
+  const normalized = normalize(pathname);
+  return normalized.replace(/^([.]{2}[\\/])+/, '').replace(/^[/\\]+/, '');
+}
+
+function buildSafeFilePath(baseDir, requestPath) {
+  const safePath = toSafePath(requestPath);
+  const resolvedPath = resolve(baseDir, safePath);
+
+  if (resolvedPath !== baseDir && !resolvedPath.startsWith(`${baseDir}${sep}`)) {
+    return null;
+  }
+
+  return resolvedPath;
 }
 
 function resolveFilePath(pathname) {
   if (pathname === '/' || pathname.startsWith('/pages/')) {
-    const requestedPath = pathname === '/' ? '/index.html' : pathname;
-    return join(PUBLIC_DIR, toSafePath(requestedPath));
+    const requestedPath = pathname === '/' ? 'index.html' : pathname;
+    return buildSafeFilePath(PUBLIC_DIR, requestedPath);
   }
 
   for (const mapping of STATIC_PREFIXES) {
     if (pathname.startsWith(mapping.prefix)) {
-      return join(mapping.baseDir, toSafePath(pathname.slice(1)));
+      return buildSafeFilePath(mapping.baseDir, pathname.slice(mapping.prefix.length));
     }
   }
 
-  return join(PUBLIC_DIR, toSafePath(pathname));
+  return buildSafeFilePath(PUBLIC_DIR, pathname);
 }
 
 function isReadableFile(filePath) {
-  if (!existsSync(filePath)) return false;
+  if (!filePath || !existsSync(filePath)) return false;
 
   try {
     return statSync(filePath).isFile();
@@ -64,15 +76,17 @@ export function handleStaticRoutes(req, res, pathname) {
   }
 
   const contentType = MIME_TYPES[extname(filePath)] || 'application/octet-stream';
-  res.writeHead(200, { 'Content-Type': contentType });
-
   const stream = createReadStream(filePath);
-  stream.pipe(res);
 
   stream.on('error', () => {
-    res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+    if (!res.headersSent) {
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+    }
     res.end('Internal Server Error');
   });
+
+  res.writeHead(200, { 'Content-Type': contentType });
+  stream.pipe(res);
 
   return true;
 }
