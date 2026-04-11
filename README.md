@@ -27,8 +27,13 @@ Ouvrir ensuite: `http://localhost:3000`.
 ## API backend locale
 
 - `GET /api/health`
-- `GET /api/products`
+- `GET /api/products` (filtres possibles: `category`, `inStock`, `search`, `minPrice`, `maxPrice`, `sortBy`, `sortOrder`, `limit`, `offset`)
+- `GET /api/products/categories`
 - `GET /api/products/:id`
+- `POST /api/products` (création)
+- `PATCH /api/products/:id` (mise à jour partielle)
+- `DELETE /api/products/:id` (suppression)
+- `POST /api/products/validate` (validation payload)
 
 ## Structure du dépôt
 
