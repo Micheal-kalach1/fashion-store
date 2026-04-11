@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
   const requestUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
   const { pathname } = requestUrl;
 
-  if (handleApiRoutes(req, res, pathname)) {
+  if (handleApiRoutes(req, res, requestUrl)) {
     return;
   }
 
